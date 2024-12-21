@@ -2,6 +2,11 @@
 #include <string.h>
 #include "fungsi.h"
 
+#define MAX_KENDARAAN 100
+#define SLOT_PER_LANTAI_MOBIL 36
+#define SLOT_PER_LANTAI_MOTOR 72
+#define LANTAI_MOBIL 2
+#define LANTAI_MOTOR 1
 
 int main() {
 
@@ -29,8 +34,21 @@ int main() {
         scanf("%d", &pilihan);
         switch (pilihan) {
             case 1:
-                kendaraanMasuk(nomor, jenis, waktu);
-                parkir_kendaraan(slot_motor[0], SLOT_PER_LANTAI_MOTOR, 0);
+                printf("Masukkan jenis kendaraan (1: Mobil, 2: Motor): ");
+                scanf("%d", &jenis_kendaraan);
+                if (jenis_kendaraan == 1) {
+                    printf("Masukkan lantai parkir (2 atau 3): ");
+                    scanf("%d", &lantai);
+                    if (lantai >= 2 && lantai <= 3) {
+                        kendaraanMasuk(slot_mobil[lantai - 2], SLOT_PER_LANTAI_MOBIL, lantai - 1);
+                    } else {
+                        printf("Lantai tidak valid. Silakan coba lagi.\n");
+                    }
+                } else if (jenis_kendaraan == 2) {
+                    kendaraanMasuk(slot_motor[0], SLOT_PER_LANTAI_MOTOR, 0);
+                } else {
+                    printf("Jenis kendaraan tidak valid. Silakan coba lagi.\n");
+                }
                 break;
             case 2:
                 kendaraanKeluar();
@@ -51,6 +69,7 @@ int main() {
                     return 1;
                     fclose(file);
                 }
+                break;
             case 5:
                 printf("Terima kasih telah menggunakan program ini.\n");
                 return 0;
