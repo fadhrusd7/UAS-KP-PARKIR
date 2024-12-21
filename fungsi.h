@@ -20,8 +20,22 @@ typedef struct {
 Kendaraan kendaraan[MAX_KENDARAAN];
 int jumlahKendaraan = 0;
 
+// Fungsi untuk menampilkan denah parkir
+void tampilkan_denah(int slot_parkir[], int lantai, int slot_per_lantai) {
+    printf("\nDenah Parkir Lantai %d:\n", lantai + 1);
+    printf("--------------------------------------------\n");
+
+    for (int i = 0; i < slot_per_lantai; i++) {
+        printf("| %-2d:%-6s ", i + 1, slot_parkir[i] == 0 ? "Kosong" : "Ada");
+        if ((i + 1) % 6 == 0) {
+            printf("|\n");
+        }
+    }
+    printf("----------------------------------------------------------------------\n");
+}
+
 // Fungsi untuk mencatat kendaraan masuk
-void kendaraanMasuk() {
+void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai) {
     if (jumlahKendaraan >= MAX_KENDARAAN) {
         printf("Maaf, kapasitas parkir penuh.\n");
         return;
@@ -49,36 +63,11 @@ void kendaraanMasuk() {
     strcpy(kendaraan[jumlahKendaraan].jenisKendaraan, jenis);
     kendaraan[jumlahKendaraan].waktuMasuk = waktuMasuk;
     kendaraan[jumlahKendaraan].aktif = 1;
-    jumlahKendaraan++;
 
-    printf("\n--- Karcis Parkir Masuk ---\n");
-    printf("Nomor Kendaraan: %s\n", nomor);
-    printf("Jenis Kendaraan: %s\n", jenis);
-    printf("Waktu Masuk: %d:%02d\n", jamMasuk, menitMasuk);
-    printf("---------------------------\n");
-    printf("Kendaraan berhasil dicatat.\n");
-}
-
-// Fungsi untuk menampilkan denah parkir
-void tampilkan_denah(int slot_parkir[], int lantai, int slot_per_lantai) {
-    printf("\nDenah Parkir Lantai %d:\n", lantai + 1);
-    printf("--------------------------------------------\n");
-
-    for (int i = 0; i < slot_per_lantai; i++) {
-        printf("| %-2d:%-6s ", i + 1, slot_parkir[i] == 0 ? "Kosong" : "Ada");
-        if ((i + 1) % 6 == 0) {
-            printf("|\n");
-        }
-    }
-    printf("----------------------------------------------------------------------\n");
-}
-
-// Fungsi untuk memarkir kendaraan
-void parkir_kendaraan(int slot_parkir[], int slot_per_lantai, int lantai) {
-    if(kendaraan.jenisKendaraan == "Mobil"){
-        
-    }
+    // Tampilkan denah parkir
     tampilkan_denah(slot_parkir, lantai, slot_per_lantai);
+
+    // Memilih slot parkir
     printf("Masukkan nomor slot yang ingin digunakan (1-%d): ", slot_per_lantai);
     int slot;
     scanf("%d", &slot);
@@ -87,6 +76,15 @@ void parkir_kendaraan(int slot_parkir[], int slot_per_lantai, int lantai) {
         if (slot_parkir[slot - 1] == 0) {
             slot_parkir[slot - 1] = 1;
             printf("Kendaraan berhasil diparkir di Lantai %d, Slot %d.\n", lantai + 1, slot);
+            jumlahKendaraan++;
+
+            printf("\n--- Karcis Parkir Masuk ---\n");
+            printf("Nomor Kendaraan: %s\n", nomor);
+            printf("Jenis Kendaraan: %s\n", jenis);
+            printf("Waktu Masuk: %d:%02d\n", jamMasuk, menitMasuk);
+            printf("Slot Parkir: Lantai %d, Slot %d\n", lantai + 1, slot);
+            printf("---------------------------\n");
+            printf("Kendaraan berhasil dicatat.\n");
         } else {
             printf("Slot %d di Lantai %d sudah terisi.\n", slot, lantai + 1);
         }
