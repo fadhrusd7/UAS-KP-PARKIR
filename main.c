@@ -19,10 +19,10 @@ int main() {
     char jenis[20];
     int waktu;
     
-    printf("----PARKIR----\n");
-    printf("--------------\n");
-    printf("YU EN ES PLAZA\n");
-    printf("--------------\n");
+    printf("------PARKIR------\n");
+    printf("------------------\n");
+    printf("    U N S MALL    \n");
+    printf("------------------\n");
     do {
         printf("\n1. Kendaraan Masuk\n");
         printf("2. Kendaraan Keluar\n");
@@ -40,18 +40,32 @@ int main() {
                     printf("Masukkan lantai parkir (2 atau 3): ");
                     scanf("%d", &lantai);
                     if (lantai >= 2 && lantai <= 3) {
-                        kendaraanMasuk(slot_mobil[lantai - 2], SLOT_PER_LANTAI_MOBIL, lantai - 1);
+                        kendaraanMasuk(slot_mobil[lantai - 2], SLOT_PER_LANTAI_MOBIL, lantai - 1, "Mobil");
                     } else {
                         printf("Lantai tidak valid. Silakan coba lagi.\n");
                     }
                 } else if (jenis_kendaraan == 2) {
-                    kendaraanMasuk(slot_motor[0], SLOT_PER_LANTAI_MOTOR, 0);
+                    kendaraanMasuk(slot_motor[0], SLOT_PER_LANTAI_MOTOR, 0, "Motor");
                 } else {
                     printf("Jenis kendaraan tidak valid. Silakan coba lagi.\n");
                 }
                 break;
             case 2:
-                kendaraanKeluar();
+                printf("Masukkan jenis kendaraan (1: Mobil, 2: Motor): ");
+                scanf("%d", &jenis_kendaraan);
+                if (jenis_kendaraan == 1) {
+                    printf("Masukkan lantai parkir (2 atau 3): ");
+                    scanf("%d", &lantai);
+                    if (lantai >= 2 && lantai <= 3) {
+                        kendaraanKeluar(slot_mobil[lantai - 2], SLOT_PER_LANTAI_MOBIL, lantai - 1);
+                    } else {
+                        printf("Lantai tidak valid. Silakan coba lagi.\n");
+                    }
+                } else if (jenis_kendaraan == 2) {
+                    kendaraanKeluar(slot_motor[0], SLOT_PER_LANTAI_MOTOR, 0);
+                } else {
+                    printf("Jenis kendaraan tidak valid. Silakan coba lagi.\n");
+                }
                 break;
             case 3:
                 printf("\n--- Status Parkir Motor (Lantai 1) ---\n");
@@ -64,11 +78,16 @@ int main() {
                 break;
             case 4:
                 FILE *file = fopen("parkir_log.txt", "r");
-                if(file == NULL){
-                    printf("Error opening file\n");
+                if (file == NULL) {
+                    printf("Gagal membuka file.\n");
                     return 1;
-                    fclose(file);
                 }
+                printf("\n--- Data Parkir ---\n");
+                char c;
+                while ((c = fgetc(file)) != EOF) {
+                    printf("%c", c);
+                }
+                fclose(file);
                 break;
             case 5:
                 printf("Terima kasih telah menggunakan program ini.\n");
