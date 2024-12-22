@@ -10,13 +10,12 @@
 #define LANTAI_MOBIL 2
 #define LANTAI_MOTOR 1
 
-
 typedef struct {
     char nomorKendaraan[20];
-    char jenisKendaraan[20]; 
-    int waktuMasuk;          
-    int waktuKeluar;         
-    int aktif;               
+    char jenisKendaraan[20];
+    int waktuMasuk;
+    int waktuKeluar;
+    int aktif;
     int slot;
     int lantai;
 } Kendaraan;
@@ -47,15 +46,14 @@ void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai, const ch
     int jamMasuk, menitMasuk;
 
     printf("Masukkan nomor kendaraan (contoh: R 1711 SR): ");
-    getchar();
+    getchar(); // Membersihkan buffer input
     fgets(nomor, sizeof(nomor), stdin);
-    nomor[strcspn(nomor, "\n")] = 0;
+    nomor[strcspn(nomor, "\n")] = 0; // Menghapus karakter newline
 
     printf("Masukkan waktu masuk (jam menit, format 24 jam): ");
-    scanf("%d %d", &jamMasuk, &menitMasuk);
-
-    if (jamMasuk < 0 || jamMasuk >= 24 || menitMasuk < 0 || menitMasuk >= 60) {
+    if (scanf("%d %d", &jamMasuk, &menitMasuk) != 2 || jamMasuk < 0 || jamMasuk >= 24 || menitMasuk < 0 || menitMasuk >= 60) {
         printf("Waktu masuk tidak valid. Jam harus antara 0-23 dan menit harus antara 0-59.\n");
+        while (getchar() != '\n'); // Membersihkan buffer input
         return;
     }
 
@@ -71,27 +69,27 @@ void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai, const ch
 
     printf("Masukkan nomor slot yang ingin digunakan (1-%d): ", slot_per_lantai);
     int slot;
-    scanf("%d", &slot);
-
-    if (slot > 0 && slot <= slot_per_lantai) {
-        if (slot_parkir[slot - 1] == 0) {
-            slot_parkir[slot - 1] = 1;
-            kendaraan[jumlahKendaraan].slot = slot - 1;
-            printf("Kendaraan berhasil diparkir di Lantai %d, Slot %d.\n", lantai + 1, slot);
-            jumlahKendaraan++;
-
-            printf("\n--- Karcis Parkir Masuk U N S MALL---\n");
-            printf("Nomor Kendaraan: %s\n", nomor);
-            printf("Jenis Kendaraan: %s\n", jenis);
-            printf("Waktu Masuk: %d:%02d\n", jamMasuk, menitMasuk);
-            printf("Slot Parkir: Lantai %d, Slot %d\n", lantai + 1, slot);
-            printf("---------------------------\n");
-            printf("Kendaraan berhasil dicatat.\n");
-        } else {
-            printf("Slot %d di Lantai %d sudah terisi.\n", slot, lantai + 1);
-        }
-    } else {
+    if (scanf("%d", &slot) != 1 || slot <= 0 || slot > slot_per_lantai) {
         printf("Nomor slot tidak valid!\n");
+        while (getchar() != '\n'); // Membersihkan buffer input
+        return;
+    }
+
+    if (slot_parkir[slot - 1] == 0) {
+        slot_parkir[slot - 1] = 1;
+        kendaraan[jumlahKendaraan].slot = slot - 1;
+        printf("Kendaraan berhasil diparkir di Lantai %d, Slot %d.\n", lantai + 1, slot);
+        jumlahKendaraan++;
+
+        printf("\n--- Karcis Parkir Masuk U N S MALL---\n");
+        printf("Nomor Kendaraan: %s\n", nomor);
+        printf("Jenis Kendaraan: %s\n", jenis);
+        printf("Waktu Masuk: %d:%02d\n", jamMasuk, menitMasuk);
+        printf("Slot Parkir: Lantai %d, Slot %d\n", lantai + 1, slot);
+        printf("---------------------------\n");
+        printf("Kendaraan berhasil dicatat.\n");
+    } else {
+        printf("Slot %d di Lantai %d sudah terisi.\n", slot, lantai + 1);
     }
 }
 
@@ -126,15 +124,14 @@ void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
     int jamKeluar, menitKeluar;
 
     printf("Masukkan nomor kendaraan yang keluar: ");
-    getchar();
+    getchar(); // Membersihkan buffer input
     fgets(nomor, sizeof(nomor), stdin);
-    nomor[strcspn(nomor, "\n")] = 0;
+    nomor[strcspn(nomor, "\n")] = 0; // Menghapus karakter newline
 
     printf("Masukkan waktu keluar (jam menit, format 24 jam): ");
-    scanf("%d %d", &jamKeluar, &menitKeluar);
-
-    if (jamKeluar < 0 || jamKeluar >= 24 || menitKeluar < 0 || menitKeluar >= 60) {
+    if (scanf("%d %d", &jamKeluar, &menitKeluar) != 2 || jamKeluar < 0 || jamKeluar >= 24 || menitKeluar < 0 || menitKeluar >= 60) {
         printf("Waktu keluar tidak valid. Jam harus antara 0-23 dan menit harus antara 0-59.\n");
+        while (getchar() != '\n'); // Membersihkan buffer input
         return;
     }
 
@@ -149,7 +146,7 @@ void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
             if (durasi < 0) {
                 durasi += 1440;
             }
-            durasi = durasi / 60;
+            durasi = (durasi + 59) / 60;
 
             float tarif = hitung(durasi, kendaraan[i].jenisKendaraan);
 
@@ -187,12 +184,12 @@ void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
     printf("Kendaraan dengan nomor %s tidak ditemukan atau sudah keluar.\n", nomor);
 }
 
-void Carikendaraan(){
+void Carikendaraan() {
     char nomor[20];
     printf("Masukkan nomor kendaraan yang dicari: ");
-    getchar();
+    getchar(); // Membersihkan buffer input
     fgets(nomor, sizeof(nomor), stdin);
-    nomor[strcspn(nomor, "\n")] = 0;
+    nomor[strcspn(nomor, "\n")] = 0; // Menghapus karakter newline
 
     for (int i = 0; i < jumlahKendaraan; i++) {
         if (kendaraan[i].aktif && strcmp(kendaraan[i].nomorKendaraan, nomor) == 0) {
@@ -207,6 +204,5 @@ void Carikendaraan(){
 
     printf("Kendaraan dengan nomor %s tidak ditemukan.\n", nomor);
 }
-
 
 #endif
