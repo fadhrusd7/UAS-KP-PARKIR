@@ -75,7 +75,7 @@ void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai, const ch
             printf("Kendaraan berhasil diparkir di Lantai %d, Slot %d.\n", lantai + 1, slot);
             jumlahKendaraan++;
 
-            printf("\n--- Karcis Parkir Masuk ---\n");
+            printf("\n--- Karcis Parkir Masuk U N S MALL---\n");
             printf("Nomor Kendaraan: %s\n", nomor);
             printf("Jenis Kendaraan: %s\n", jenis);
             printf("Waktu Masuk: %d:%02d\n", jamMasuk, menitMasuk);
@@ -143,7 +143,7 @@ void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
 
             float tarif = hitung(durasi, kendaraan[i].jenisKendaraan);
 
-            printf("\n--- Karcis Parkir Keluar ---\n");
+            printf("\n--- Karcis Parkir Keluar U N S MALL---\n");
             printf("Nomor Kendaraan: %s\n", kendaraan[i].nomorKendaraan);
             printf("Jenis Kendaraan: %s\n", kendaraan[i].jenisKendaraan);
             printf("Waktu Masuk: %d:%02d\n", kendaraan[i].waktuMasuk / 60, kendaraan[i].waktuMasuk % 60);
@@ -176,5 +176,27 @@ void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
 
     printf("Kendaraan dengan nomor %s tidak ditemukan atau sudah keluar.\n", nomor);
 }
+
+void Carikendaraan(){
+    char nomor[20];
+    printf("Masukkan nomor kendaraan yang dicari: ");
+    getchar();
+    fgets(nomor, sizeof(nomor), stdin);
+    nomor[strcspn(nomor, "\n")] = 0;
+
+    for (int i = 0; i < jumlahKendaraan; i++) {
+        if (kendaraan[i].aktif && strcmp(kendaraan[i].nomorKendaraan, nomor) == 0) {
+            printf("Kendaraan ditemukan!\n");
+            printf("Nomor Kendaraan: %s\n", kendaraan[i].nomorKendaraan);
+            printf("Jenis Kendaraan: %s\n", kendaraan[i].jenisKendaraan);
+            printf("Waktu Masuk: %d:%02d\n", kendaraan[i].waktuMasuk / 60, kendaraan[i].waktuMasuk % 60);
+            printf("Slot Parkir: Lantai %d, Slot %d\n", kendaraan[i].lantai + 1, kendaraan[i].slot + 1);
+            return;
+        }
+    }
+
+    printf("Kendaraan dengan nomor %s tidak ditemukan.\n", nomor);
+}
+
 
 #endif
