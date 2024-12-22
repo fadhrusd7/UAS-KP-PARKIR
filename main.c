@@ -27,8 +27,9 @@ int main() {
         printf("\n1. Kendaraan Masuk\n");
         printf("2. Kendaraan Keluar\n");
         printf("3. Cek Slot Parkir\n");
-        printf("4. Cek Data\n");
-        printf("5. Keluar Program\n");
+        printf("4. Cari Kendaraan\n");
+        printf("5. Cek Data\n");
+        printf("6. Keluar Program\n");
         printf("Pilih menu: ");
         int pilihan;
         scanf("%d", &pilihan);
@@ -77,6 +78,10 @@ int main() {
                 }
                 break;
             case 4:
+                printf("Cari Kendaraan Anda\n");
+                Carikendaraan();
+                break;
+            case 5:
                 FILE *file = fopen("parkir_log.txt", "r");
                 if (file == NULL) {
                     printf("Gagal membuka file.\n");
@@ -89,7 +94,7 @@ int main() {
                 }
                 fclose(file);
                 break;
-            case 5:
+            case 6:
                 printf("Terima kasih telah menggunakan program ini.\n");
                 return 0;
             default:
