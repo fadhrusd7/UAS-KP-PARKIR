@@ -54,6 +54,11 @@ void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai, const ch
     printf("Masukkan waktu masuk (jam menit, format 24 jam): ");
     scanf("%d %d", &jamMasuk, &menitMasuk);
 
+    if (jamMasuk < 0 || jamMasuk >= 24 || menitMasuk < 0 || menitMasuk >= 60) {
+        printf("Waktu masuk tidak valid. Jam harus antara 0-23 dan menit harus antara 0-59.\n");
+        return;
+    }
+
     int waktuMasuk = jamMasuk * 60 + menitMasuk;
 
     strcpy(kendaraan[jumlahKendaraan].nomorKendaraan, nomor);
@@ -127,6 +132,11 @@ void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
 
     printf("Masukkan waktu keluar (jam menit, format 24 jam): ");
     scanf("%d %d", &jamKeluar, &menitKeluar);
+
+    if (jamKeluar < 0 || jamKeluar >= 24 || menitKeluar < 0 || menitKeluar >= 60) {
+        printf("Waktu keluar tidak valid. Jam harus antara 0-23 dan menit harus antara 0-59.\n");
+        return;
+    }
 
     int waktuKeluar = jamKeluar * 60 + menitKeluar;
 
