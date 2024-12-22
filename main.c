@@ -35,7 +35,7 @@ int main() {
         scanf("%d", &pilihan);
         switch (pilihan) {
             case 1:
-                printf("Masukkan jenis kendaraan (1: Mobil, 2: Motor): ");
+                printf("1. Mobil\n2. Motor\nMasukkan jenis kendaraan : ");
                 scanf("%d", &jenis_kendaraan);
                 if (jenis_kendaraan == 1) {
                     printf("Masukkan lantai parkir (2 atau 3): ");
@@ -52,7 +52,7 @@ int main() {
                 }
                 break;
             case 2:
-                printf("Masukkan jenis kendaraan (1: Mobil, 2: Motor): ");
+                printf("1. Mobil\n2. Motor\nMasukkan jenis kendaraan : ");
                 scanf("%d", &jenis_kendaraan);
                 if (jenis_kendaraan == 1) {
                     printf("Masukkan lantai parkir (2 atau 3): ");
