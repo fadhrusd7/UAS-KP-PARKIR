@@ -1,5 +1,8 @@
-#ifndef VALIDASI_H
-#define VALIDASI_H
+#ifndef FUNGSI_H
+#define FUNGSI_H
+
+#include <stdio.h>
+#include <string.h>
 
 #define MAX_KENDARAAN 100
 #define SLOT_PER_LANTAI_MOBIL 36
@@ -7,20 +10,20 @@
 #define LANTAI_MOBIL 2
 #define LANTAI_MOTOR 1
 
-// Struktur data untuk mencatat detail kendaraan
+
 typedef struct {
     char nomorKendaraan[20];
-    char jenisKendaraan[20]; // Contoh: "Mobil" atau "Motor"
-    int waktuMasuk;          // Format waktu dalam menit (misal: 840 untuk jam 14:00)
-    int waktuKeluar;         // Format waktu dalam menit
-    int aktif;               // 1 jika kendaraan masih parkir, 0 jika sudah keluar
+    char jenisKendaraan[20]; 
+    int waktuMasuk;          
+    int waktuKeluar;         
+    int aktif;               
+    int slot;
+    int lantai;
 } Kendaraan;
 
-// Array untuk menyimpan data kendaraan
 Kendaraan kendaraan[MAX_KENDARAAN];
 int jumlahKendaraan = 0;
 
-// Fungsi untuk menampilkan denah parkir
 void tampilkan_denah(int slot_parkir[], int lantai, int slot_per_lantai) {
     printf("\nDenah Parkir Lantai %d:\n", lantai + 1);
     printf("--------------------------------------------\n");
@@ -34,40 +37,33 @@ void tampilkan_denah(int slot_parkir[], int lantai, int slot_per_lantai) {
     printf("----------------------------------------------------------------------\n");
 }
 
-// Fungsi untuk mencatat kendaraan masuk
-void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai) {
+void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai, const char *jenis) {
     if (jumlahKendaraan >= MAX_KENDARAAN) {
         printf("Maaf, kapasitas parkir penuh.\n");
         return;
     }
 
     char nomor[20];
-    char jenis[20];
     int jamMasuk, menitMasuk;
 
     printf("Masukkan nomor kendaraan (contoh: R 1711 SR): ");
-    getchar(); // Membersihkan buffer input
+    getchar();
     fgets(nomor, sizeof(nomor), stdin);
-    nomor[strcspn(nomor, "\n")] = 0; // Menghapus karakter newline
+    nomor[strcspn(nomor, "\n")] = 0;
 
-    printf("Masukkan jenis kendaraan (Mobil/Motor): ");
-    scanf("%s", jenis);
     printf("Masukkan waktu masuk (jam menit, format 24 jam): ");
     scanf("%d %d", &jamMasuk, &menitMasuk);
 
-    // Menghitung waktu masuk dalam menit
     int waktuMasuk = jamMasuk * 60 + menitMasuk;
 
-    // Simpan detail kendaraan
     strcpy(kendaraan[jumlahKendaraan].nomorKendaraan, nomor);
     strcpy(kendaraan[jumlahKendaraan].jenisKendaraan, jenis);
     kendaraan[jumlahKendaraan].waktuMasuk = waktuMasuk;
     kendaraan[jumlahKendaraan].aktif = 1;
+    kendaraan[jumlahKendaraan].lantai = lantai;
 
-    // Tampilkan denah parkir
     tampilkan_denah(slot_parkir, lantai, slot_per_lantai);
 
-    // Memilih slot parkir
     printf("Masukkan nomor slot yang ingin digunakan (1-%d): ", slot_per_lantai);
     int slot;
     scanf("%d", &slot);
@@ -75,6 +71,7 @@ void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai) {
     if (slot > 0 && slot <= slot_per_lantai) {
         if (slot_parkir[slot - 1] == 0) {
             slot_parkir[slot - 1] = 1;
+            kendaraan[jumlahKendaraan].slot = slot - 1;
             printf("Kendaraan berhasil diparkir di Lantai %d, Slot %d.\n", lantai + 1, slot);
             jumlahKendaraan++;
 
@@ -93,30 +90,10 @@ void kendaraanMasuk(int slot_parkir[], int slot_per_lantai, int lantai) {
     }
 }
 
-// Fungsi untuk mengosongkan slot
-void keluarkan_kendaraan(int slot_parkir[], int slot_per_lantai, int lantai) {
-    tampilkan_denah(slot_parkir, lantai, slot_per_lantai);
-    printf("Masukkan nomor slot yang ingin dikosongkan (1-%d): ", slot_per_lantai);
-    int slot;
-    scanf("%d", &slot);
-
-    if (slot > 0 && slot <= slot_per_lantai) {
-        if (slot_parkir[slot - 1] == 1) {
-            slot_parkir[slot - 1] = 0;
-            printf("Slot %d di Lantai %d berhasil dikosongkan.\n", slot, lantai + 1);
-        } else {
-            printf("Slot %d di Lantai %d sudah kosong.\n", slot, lantai + 1);
-        }
-    } else {
-        printf("Nomor slot tidak valid!\n");
-    }
-}
-
-
 float hitung(int durasi, char jenis[20]) {
     float tarif = 0;
 
-    if (strcmp(jenis, "Motor") == 0) { // Motor
+    if (strcmp(jenis, "Motor") == 0) {
         if (durasi <= 2) {
             tarif = 2000;
         } else if (durasi < 24) {
@@ -124,7 +101,7 @@ float hitung(int durasi, char jenis[20]) {
         } else {
             tarif = 20000;
         }
-    } else if (strcmp(jenis, "Mobil") == 0) { // Mobil
+    } else if (strcmp(jenis, "Mobil") == 0) {
         if (durasi <= 2) {
             tarif = 5000;
         } else if (durasi < 24) {
@@ -139,39 +116,33 @@ float hitung(int durasi, char jenis[20]) {
     return tarif;
 }
 
-// Fungsi untuk kendaraan keluar
-void kendaraanKeluar() {
+void kendaraanKeluar(int slot_parkir[], int slot_per_lantai, int lantai) {
     char nomor[20];
     int jamKeluar, menitKeluar;
-    int durasiJam;
 
     printf("Masukkan nomor kendaraan yang keluar: ");
-    getchar(); // Membersihkan buffer input
+    getchar();
     fgets(nomor, sizeof(nomor), stdin);
-    nomor[strcspn(nomor, "\n")] = 0; // Menghapus karakter newline
+    nomor[strcspn(nomor, "\n")] = 0;
 
     printf("Masukkan waktu keluar (jam menit, format 24 jam): ");
     scanf("%d %d", &jamKeluar, &menitKeluar);
 
-    // Menghitung waktu keluar dalam menit
     int waktuKeluar = jamKeluar * 60 + menitKeluar;
 
-    // Cari kendaraan berdasarkan nomor
     for (int i = 0; i < jumlahKendaraan; i++) {
         if (kendaraan[i].aktif && strcmp(kendaraan[i].nomorKendaraan, nomor) == 0) {
             kendaraan[i].waktuKeluar = waktuKeluar;
             kendaraan[i].aktif = 0;
 
-            // Hitung durasi dan tarif
-            int durasi = (waktuKeluar - kendaraan[i].waktuMasuk);
+            int durasi = waktuKeluar - kendaraan[i].waktuMasuk;
             if (durasi < 0) {
-                durasi += 1440; // Penanganan jika waktu keluar melewati tengah malam
+                durasi += 1440;
             }
-            durasi = durasi / 60; // Durasi dalam jam
+            durasi = durasi / 60;
 
             float tarif = hitung(durasi, kendaraan[i].jenisKendaraan);
 
-            // Tampilkan struk
             printf("\n--- Karcis Parkir Keluar ---\n");
             printf("Nomor Kendaraan: %s\n", kendaraan[i].nomorKendaraan);
             printf("Jenis Kendaraan: %s\n", kendaraan[i].jenisKendaraan);
@@ -195,6 +166,9 @@ void kendaraanKeluar() {
             fprintf(file, "Tarif Parkir: Rp%.2f\n", tarif);
             fprintf(file, "----------------------------\n");
             fclose(file);
+
+            slot_parkir[kendaraan[i].slot] = 0;
+            printf("Slot %d di Lantai %d berhasil dikosongkan.\n", kendaraan[i].slot + 1, kendaraan[i].lantai + 1);
 
             return;
         }
